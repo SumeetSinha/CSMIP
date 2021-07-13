@@ -1,30 +1,52 @@
-import React from "react";
-import PropTypes from "prop-types";
-// import "./Button.css";
+import React, { Component } from 'react';
+import { Form, Button, Col, Row, Container, Tabs, Tab } from 'react-bootstrap';
 
-export default class Button extends React.Component {
-  static propTypes = {
-    name: PropTypes.string,
-    orange: PropTypes.bool,
-    wide: PropTypes.bool,
-    clickHandler: PropTypes.func,
-  };
 
-  handleClick = () => {
-    this.props.clickHandler(this.props.name);
-  };
+class Tab_1 extends Component{
 
-  render() {
-    const className = [
-      "component-button",
-      this.props.orange ? "orange" : "",
-      this.props.wide ? "wide" : "",
-    ];
+    back  = (e) => {
+        e.preventDefault();
+        this.props.prevStep();
+    }
 
-    return (
-      <div className={className.join(" ").trim()}>
-        <button onClick={this.handleClick}>{this.props.name}</button>
-      </div>
-    );
-  }
+    saveAndContinue = (e) => {
+        e.preventDefault();
+        this.props.nextStep();
+    };
+
+    render() {
+        return( 
+          <Tabs id="CSMIP_Tabs" transition={false}>
+               <Tab eventKey="Project_Information" title="Project Information">
+              <p></p>
+              <Form>
+                <Form.Group as={Row} controlId="ProjectName">
+                  <Col sm={{ span: 2, offset: 0 }}>
+                    <Form.Label> &nbsp;&nbsp; Project Name </Form.Label>
+                  </Col>
+                  <Col sm={{ span: 3, offset: 0 }}>
+                    <Form.Control type="text" defaultValue={this.props.inputValues.firstName} required onChange={this.props.handleChange}/>
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId="Date" onClick={this.validateForm}>
+                  <Col sm={{ span: 2, offset: 0 }}>
+                    <Form.Label> &nbsp;&nbsp; Date </Form.Label>
+                  </Col>
+                  <Col sm={{ span: 3, offset: 0 }}>
+                     <Form.Control type="Date"  defaultValue={this.props.inputValues.lastName} required onChange={this.props.handleChange}/>
+                  </Col>
+                 </Form.Group>
+                 <Button variant="primary" onClick={this.saveAndContinue} type="submit">Next</Button>
+              </Form>
+              
+            </Tab>
+            
+          <Tab eventKey="Ground_Motion" title="Select Ground Motion" disabled/>
+          <Tab eventKey="Results" title="Results" disabled/>
+          </Tabs>
+        );
+    }
 }
+
+export default Tab_1;

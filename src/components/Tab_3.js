@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button, Col, Row, Container, Tabs, Tab } from 'react-bootstrap';
 
 
-class Tab_2 extends Component{
+class Tab_3 extends Component{
 
     back  = (e) => {
         e.preventDefault();
@@ -16,10 +16,12 @@ class Tab_2 extends Component{
 
     render() {
         return( 
-          <Tabs id="CSMIP_Tabs" activeKey="Ground_Motion" transition={false}>
+          <Tabs id="CSMIP_Tabs" activeKey="Results" transition={false}>
             <Tab eventKey="Project_Information" title="Project Information" disabled/>
-            <p></p>
-            <Tab eventKey="Ground_Motion" title="Select Ground Motion">
+            <Tab eventKey="Ground_Motion" title="Select Ground Motion" disabled>
+            </Tab>
+
+            <Tab eventKey="Results" title="Results" disabled>
             <p></p>
             <Form>
                 <Form.Group as={Row} controlId="ProjectName">
@@ -40,14 +42,12 @@ class Tab_2 extends Component{
                   </Col>
                  </Form.Group>
                  <Button variant="secondary" onClick={this.back}>Back</Button>{' '}
-                 <Button variant="primary" onClick={this.saveAndContinue}>Next</Button>
+                 <Button variant="primary">Analyze</Button>
               </Form>
-              </Tab>
-
-            <Tab eventKey="Results" title="Results" disabled/>
+            </Tab>
           </Tabs>
         );
     }
 }
 
-export default Tab_2;
+export default Tab_3;
