@@ -23,7 +23,7 @@ class Tab_3 extends Component{
 
             <Tab eventKey="Results" title="Results" disabled>
             <p></p>
-            <Form>
+            <Form  onSubmit={this.saveAndContinue} validated>
                 <Form.Group as={Row} controlId="ProjectName">
                   <Col sm={{ span: 2, offset: 0 }}>
                     <Form.Label> &nbsp;&nbsp; Tab_3Project Name </Form.Label>
@@ -42,7 +42,7 @@ class Tab_3 extends Component{
                   </Col>
                  </Form.Group>
                  <Button variant="secondary" onClick={this.back}>Back</Button>{' '}
-                 <Button variant="primary">Analyze</Button>
+                 <Button variant="primary" type="Submit">Analyze</Button>
               </Form>
             </Tab>
           </Tabs>

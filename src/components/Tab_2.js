@@ -21,7 +21,7 @@ class Tab_2 extends Component{
             <p></p>
             <Tab eventKey="Ground_Motion" title="Select Ground Motion">
             <p></p>
-            <Form>
+            <Form onSubmit={this.saveAndContinue} validated>
                 <Form.Group as={Row} controlId="ProjectName">
                   <Col sm={{ span: 2, offset: 0 }}>
                     <Form.Label> &nbsp;&nbsp; Tab_2Project Name </Form.Label>
@@ -40,7 +40,7 @@ class Tab_2 extends Component{
                   </Col>
                  </Form.Group>
                  <Button variant="secondary" onClick={this.back}>Back</Button>{' '}
-                 <Button variant="primary" onClick={this.saveAndContinue}>Next</Button>
+                 <Button variant="primary" type="Submit">Next</Button>
               </Form>
               </Tab>
 
