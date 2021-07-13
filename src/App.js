@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import { Col, Row } from "react-bootstrap";
-
-
 // import tab components
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
@@ -13,13 +10,17 @@ import TabPane from 'react-bootstrap/TabPane'
 import Form from 'react-bootstrap/Form'
 import FormCheck from 'react-bootstrap/FormCheck'
 import FormFile from 'react-bootstrap/FormFile'
+// import buttons components
+// import { Button } from 'react-bootstrap';
+// import rows and columns 
+import { Col, Row } from "react-bootstrap";
 
+import Analyze from './components/Analyze'
+import Next     from './components/Next'
+import Previous from './components/Previous'
 
 import logo from './logo.svg';
 import './App.css';
-
-import { Button } from 'react-bootstrap';
-
 
 function App() {
   const [currentTime, setCurrentTime] = useState(0);
@@ -30,9 +31,11 @@ function App() {
     });
   }, []);
 
+
   return (
       <div className="container"> 
-        <h2> California Strong Motion Instrumentation Program – CSMIP APP</h2>
+
+        <h2> Application to Generate Input Motions for NDAs</h2>
         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
         <hr/>
         <Tabs id="CSMIP_Tabs" transition={false}>
@@ -57,37 +60,33 @@ function App() {
                   <Form.Control type="Date" placeholder="Date" />
                 </Col>
               </Form.Group>
+              <Next name="Next" currentTab = "Project_Information"/>
 
-              <Form.Group as={Row}> 
-                <Col sm={{ span: 0, offset: 0 }}>
-                &nbsp;&nbsp; <Button type="submit" disabled > &nbsp;&nbsp; Next &nbsp;&nbsp; </Button>
-                </Col>
-              </Form.Group>
             </Form>
+            
           </Tab>
-          <Tab eventKey="Input_Soil_Data" title="Input Soil Profile" disabled>
-          </Tab>
-          <Tab eventKey="Ground_Motion" title="Select Ground Motion" disabled>
+          
+         <Tab eventKey="Ground_Motion" title="Select Ground Motion" enable>
             <p>this is setting tab</p>
           </Tab>
-          <Tab eventKey="Results" title="Results" disabled>
+          {/* <Tab eventKey="Results" title="Results" disabled>
             <p>this is profile tab</p>
-          </Tab>
-       
+          </Tab> */}
         </Tabs>
+        
+
+
+
+
         <hr/>
         <h5> Refernces</h5>
         <ul>
-        <li>1</li>
+        <li>Pretell-Ductram, A.R., Ziotopoulou, K., and Abrahamson, N. (2019). <i>Methodology for the development of input motions for nonlinear deformation analyses</i>. 7th International Conference on Earthquake Geotechnical Engineering, Rome, Italy.</li>
         </ul>
 
         <h5> Acknowledgements</h5>
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
+        <p>The project was funded by California Strong Motion Instrumentation Program under the agreemnet number xxxxx.</p>
 
-
-
-
-   
     </div>
   );
 }
