@@ -12,11 +12,7 @@ class Tab_1 extends Component{
     saveAndContinue = (e) => {
       e.preventDefault();
       this.props.nextStep();
-
     };
-
-    // background-color: gray;
-    // color: white;
 
     render() {
         return( 
@@ -29,7 +25,7 @@ class Tab_1 extends Component{
                     <Form.Label> &nbsp;&nbsp; First Name </Form.Label>
                   </Col>
                   <Col sm={{ span: 3, offset: 0 }}>
-                     <Form.Control type="text" name = "firstName" defaultValue={this.props.inputValues.lastName} required onChange={this.props.handleChange}/>
+                     <Form.Control type="text" name = "firstName" defaultValue={this.props.inputValues.firstName} required onChange={this.props.handleChange}/>
                   </Col>
                 </Form.Group>
 
@@ -40,16 +36,14 @@ class Tab_1 extends Component{
                   <Col sm={{ span: 3, offset: 0 }}>
                      <Form.Control type="text" name = "lastName" defaultValue={this.props.inputValues.lastName} required onChange={this.props.handleChange}/>
                   </Col>
-                </Form.Group>
-
-                {/* <Button variant="primary" onClick={this.saveAndContinue} type="submit">Next</Button> */}
-             
+                </Form.Group>           
                 <Button variant="primary" type="submit">Next</Button>
               </Form>
 
               
             </Tab>
           <Tab eventKey="Ground_Motion" title="Select Ground Motion" disabled/>
+          <Tab eventKey="Analyze" title="Analyze" disabled/>
           <Tab eventKey="Results" title="Results" disabled/>
           </Tabs>
         );

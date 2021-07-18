@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\sumee\Box\9_CSMIP_software\4_Web_Application\webapp\api\venv
+set VIRTUAL_ENV=C:\Users\sumee\Desktop\CSMIP\api\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

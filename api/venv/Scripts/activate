@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\sumee\Box\9_CSMIP_software\4_Web_Application\webapp\api\venv"
+VIRTUAL_ENV="C:\Users\sumee\Desktop\CSMIP\api\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
