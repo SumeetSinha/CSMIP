@@ -1,6 +1,6 @@
 # import modules 
 import sys;
-import time ;
+import time;
 
 # run analysis 
 time.sleep(5) 

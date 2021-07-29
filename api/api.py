@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import subprocess
+import os
+import json
+import numpy as np
 
 
 app = Flask(__name__, static_folder='../frontend/build')
@@ -39,11 +42,53 @@ CORS(app)
 def login():
 
     print("Sumeet")
-    print(request.json)
-    command = "python Process_Data.py sumeet"
+    print(request.json) # get the request,json from frontend
+    print(os.getcwd()) # get current working dierctory
+    command = "\"C:\Program Files (x86)\Strata 1.0.0\strata.exe\" -b Sample_Input.json"
+    File    = "Sample_Input.json"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
     process.wait()
-    # print (process.returncode)
+    print (process.returncode)
+
+    # read the json output file 
+    Fjson = open(File,)
+    # returns JSON object as a dictionary
+    data = json.load(Fjson)
+    hasResults = data["hasResults"]
+
+    if(hasResults):
+        Output_maxFreq = data["outputCatalog"]["frequency"]['max']
+        Output_minFreq = data["outputCatalog"]["frequency"]['min']
+        Output_sizeFreq = data["outputCatalog"]["frequency"]['size']
+        Output_Freq     = np.linspace(np.log10(Output_minFreq),np.log10(Output_maxFreq),Output_sizeFreq)
+        Output_Freq     = np.power(10,Output_Freq)
+
+        Output_maxPeriod = data["outputCatalog"]["period"]['max']
+        Output_minPeriod = data["outputCatalog"]["period"]['min']
+        Output_sizePeriod = data["outputCatalog"]["period"]['size']
+        Output_Period     = np.linspace(np.log10(Output_minPeriod),np.log10(Output_maxPeriod),Output_sizePeriod)
+        Output_Period     = np.power(10,Output_Period)
+
+        MaxAccelProfileOutput = data["outputCatalog"]["profilesOutputCatalog"][5]["data"][0][0]
+
+        # MaxAccelProfileOutput = data["outputCatalog"]["ratiosOutputCatalog"][5]["data"][0][0]
+
+        print(MaxAccelProfileOutput)
+
+        # Output_depth = data["outputCatalog"]['depth']
+
+        # print(Output_Freq)
+        # print(Output_Period)
+
+        # print(data["outputCatalog"]["frequency"]['max'])
+
+
+
+    # # Iterating through the json list
+    # for i in data['emp_details']:
+    #     print(i)
+
+
 
     return jsonify({'whether_analyzed': 2}), 200
 
