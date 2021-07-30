@@ -42,8 +42,7 @@ CORS(app)
 
 def CreateInputFileForAnalysis(SampleJasonFile,InputParameters):
 
-    SoilModulusModels={ 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }
-    SoilDampingModels={ 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }
+    SoilModels={ 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }
 
     # Opening JSON file
     with open(SampleJasonFile) as json_file:
@@ -74,6 +73,8 @@ def CreateInputFileForAnalysis(SampleJasonFile,InputParameters):
     sampleSoilTypecatalog = { "damping": 5, "dampingModel": {"average": [0.57,0.86], "name": "Seed & Idriss, Sand Mean","strain": [0.0001,0.000316],"type": 1}, "dampingType": "NonlinearProperty", "freq": 1, "isVaried": True, "meanStress": 2, "minDamping": 0.5,"modulusModel": {"average": [1,0.99], "name": "Seed & Idriss, Sand Mean", "strain": [0.0001,0.000316], "type": 0},"modulusType": "NonlinearProperty", "nCycles": 10, "name": "Soil type 1", "notes": "", "ocr": 1, "pi": 0, "saveData": False, "untWt": 18 }
     depth = 0
 
+    # print(InputParameters)
+
     # print(InputParameters["SoilLayers1"])
     for i in range(len(InputParameters["SoilLayers1"])-1):
 
@@ -84,26 +85,25 @@ def CreateInputFileForAnalysis(SampleJasonFile,InputParameters):
         Vs = InputParameters["SoilLayers1"][i]["Vs"]
         Gamma = InputParameters["SoilLayers1"][i]["Gamma"]
         Damping = InputParameters["SoilLayers1"][i]["Damping"]
-        Modulus_Model = InputParameters["SoilLayers1"][i]["G_Gmax_Model"]
-        Damp_Model = InputParameters["SoilLayers1"][i]["Damp_Model"]
+        Soil_Model = int(InputParameters["SoilLayers1"][i]["Soil_Model"])
 
-        # print(SoilModulusModels[Modulus_Model], " ", SoilDampingModels[Damp_Model])
-     
+        # print("Soil_Model ", Soil_Model , " ", SoilModels[Soil_Model] )
+    
         Layer["avg"] = Vs
         Layer["depth"] = depth
         Layer["soilType"] = i
         Layer["thickness"] = Thickness
 
-        damp_strain, damp_avg = np.loadtxt("./Soil_Damping_Models/"+SoilDampingModels[Damp_Model]+".txt", delimiter=',', unpack=True)
+        damp_strain, damp_avg = np.loadtxt("./Soil_Damping_Models/"+SoilModels[Soil_Model]+".txt", delimiter=',', unpack=True)
         Typecatalog["damping"] = Damping
         Typecatalog["dampingModel"]["average"] = list(damp_avg)
         Typecatalog["dampingModel"]["strain"] = list(damp_strain)
-        Typecatalog["dampingModel"]["name"] = SoilDampingModels[Damp_Model]
+        Typecatalog["dampingModel"]["name"] = SoilModels[Soil_Model]
 
-        modulus_strain, modulus_avg = np.loadtxt("./Soil_Modulus_Models/"+SoilModulusModels[Modulus_Model]+".txt", delimiter=',', unpack=True)
+        modulus_strain, modulus_avg = np.loadtxt("./Soil_Modulus_Models/"+SoilModels[Soil_Model]+".txt", delimiter=',', unpack=True)
         Typecatalog["modulusModel"]["average"] = list(modulus_avg)
         Typecatalog["modulusModel"]["strain"] = list(modulus_strain)
-        Typecatalog["modulusModel"]["name"] = SoilModulusModels[Modulus_Model]
+        Typecatalog["modulusModel"]["name"] = SoilModels[Soil_Model]
         Typecatalog["untWt"] = Gamma
 
         Typecatalog["name"] = "Soil Type "+ str(i+1)
@@ -137,7 +137,7 @@ def CreateInputFileForAnalysis(SampleJasonFile,InputParameters):
 
 def login():
 
-    print("Sumeet")
+    # print("Sumeet")
     # print(request.json) # get the request,json from frontend
     # print(os.getcwd()) # get current working dierctory
 
@@ -153,7 +153,7 @@ def login():
     Fjson = open(UniqFileName,)
     # returns JSON object as a dictionary
     data = json.load(Fjson)
-    print(data)
+    # print(data)
     hasResults = data["hasResults"]
 
     if(hasResults):
@@ -171,7 +171,7 @@ def login():
 
         # read AccelTransferFunctionOutput at the given depth 
         AccelTransferFunctionOutput = data["outputCatalog"]["ratiosOutputCatalog"][0]["data"][0][0]
-        print(AccelTransferFunctionOutput)
+        # print(AccelTransferFunctionOutput)
         AccelTransferFunctionOutput_List = []
 
         for i in range(len(AccelTransferFunctionOutput)):

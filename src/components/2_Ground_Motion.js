@@ -52,7 +52,7 @@ class Ground_Motion extends Component{
 
               <Form.Group as={Row} controlId="Date">
                <Col sm={{ span: 4, offset: 0 }}><Form.Label> &nbsp;&nbsp; Upload Frequency Amplitude Spectrum </Form.Label></Col>
-               <Col sm={{ span: 4, offset: 0 }}><Form.Control type="file" name ="FASFile" accept=".txt" required onChange={this.props.handleFile} /></Col>
+               <Col sm={{ span: 4, offset: 0 }}><Form.Control type="file" name ="FASFile" accept=".txt" onChange={this.props.handleFile} /></Col>
               </Form.Group>
 
               

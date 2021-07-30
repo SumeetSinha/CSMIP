@@ -11,6 +11,7 @@ class Application extends Component {
         // set the initial input values
         this.state = {
             step: 3,
+            Depth_of_Interest:10, // Depth of Interest
             Tol: 2,              // error tolerance (%)
             MaxIter: 15,         // maximum number of iterations
             EffStrain: 0.65,     // effective strain ratio
@@ -19,19 +20,18 @@ class Application extends Component {
             PGA: 0.17,           // peak ground acceleration
             PGV: 13.27,          // peak ground velocity
             FASFile: './FAS.txt',// FAS File
-            FAS: [{"id": "FAS","data": [{"x" :1, "y":2},{"x" :2, "y":5}]},], // FAS File Contents
-            Depth_of_Interest:10, // Depth of Interest
+            FAS: [{"id": "FAS","data": [{"x":0.05, "y":0},{"x":1.049, "y":0.0299},{"x":2.048, "y":0.0316},{"x":3.047, "y":0.031},{"x":4.046, "y":0.029},{"x":5.045, "y":0.0264625},{"x":6.044, "y":0.02419},{"x":7.043, "y":0.022034},{"x":8.042, "y":0.01976333},{"x":9.041, "y":0.01773167},{"x":10.04, "y":0.01586},{"x":11.039, "y":0.014222},{"x":12.038, "y":0.012762},{"x":13.037, "y":0.011363},{"x":14.036, "y":0.010264},{"x":15.035, "y":0.009205},{"x":16.034, "y":0.008316},{"x":17.033, "y":0.007467},{"x":18.032, "y":0.0066756},{"x":19.031, "y":0.0059976},{"x":20.03, "y":0.005396},{"x":21.029, "y":0.0047984},{"x":22.028, "y":0.0042688},{"x":23.027, "y":0.00381055},{"x":24.026, "y":0.0034118},{"x":25.025, "y":0.0030225},{"x":26.024, "y":0.0027056},{"x":27.023, "y":0.00240425},{"x":28.022, "y":0.0021556},{"x":29.021, "y":0.0019158},{"x":30.02, "y":0.001706},{"x":31.019, "y":0.00153715},{"x":32.018, "y":0.0013664},{"x":33.017, "y":0.00122245},{"x":34.016, "y":0.0010884},{"x":35.015, "y":0.00097905},{"x":36.014, "y":0.00087088},{"x":37.013, "y":0.00077557},{"x":38.012, "y":0.00069553},{"x":39.011, "y":0.00061897},{"x":40.01, "y":0.00055443},{"x":41.009, "y":0.00049555},{"x":42.008, "y":0.00044196},{"x":43.007, "y":0.00039703},{"x":44.006, "y":0.00035576},{"x":45.005, "y":0.00031815},{"x":46.004, "y":0.0002832},{"x":47.003, "y":0.00025418},{"x":48.002, "y":0.00022595},{"x":49.001, "y":0.00020298},{"x":50, "y":0.000181}]},], // FAS File Contents
             AccelTransferFunctionOutput:[{"id": "AccelTransferFunctionOutput","data": [{"x" :1, "y":2},{"x" :2, "y":5}]},], // AccelTransferFunctionOutput at depth of interest
             whether_analyzed: 0, // Whether analysis is performed
             ResultsFile: [{"id": "FAS","data": [{"x" :1, "y":2},{"x" :2, "y":5}]},],
-            SoilLayers1: [{Name: 'Layer 1',Thickness: 10, Vs: 150, Gamma: 18, Damping: 0.5, G_Gmax_Model: 2, Damp_Model: 2},
-                          {Name: 'Layer 2',Thickness: 20, Vs: 250, Gamma: 20, Damping: 0.5, G_Gmax_Model: 1, Damp_Model: 1},
-                          {Name: 'Layer 3',Thickness: 20, Vs: 0, Gamma: 18, Damping: 0.5, G_Gmax_Model: 2, Damp_Model: 2},
-                          {Name: 'Layer 4',Thickness: 20, Vs: 0, Gamma: 20, Damping: 0.5, G_Gmax_Model: 1, Damp_Model: 1},
-                          {Name: 'Bedrock',Thickness: -1, Vs: 760, Gamma: 22, Damping: 1, G_Gmax_Model: -1, Damp_Model: -1},], // Soil Layer 1 
+            SoilLayers1: [{Name: 'Layer 1',Thickness: 10, Vs: 150, Gamma: 18, Damping: 0.5, Soil_Model: 2},
+                          {Name: 'Layer 2',Thickness: 20, Vs: 250, Gamma: 20, Damping: 0.5, Soil_Model: 1},
+                          {Name: 'Layer 3',Thickness: 20, Vs: 100, Gamma: 18, Damping: 0.5, Soil_Model: 2},
+                          {Name: 'Layer 4',Thickness: 20, Vs: 100, Gamma: 20, Damping: 0.5, Soil_Model: 1},
+                          {Name: 'Bedrock',Thickness: 1, Vs: 760, Gamma: 22, Damping: 1, Soil_Model: 1},], // Soil Layer 1 
 
-            SoilLayers2: [{Name: 'Layer 1',Thickness: 10, Vs: 20, Gamma: 20, Damping: 20, G_Gmax_Model: 1, Damp_Model: 1},
-                         {Name: 'Bedrock',Thickness: 5, Vs: 20, Gamma: 20, Damping: 20, G_Gmax_Model: 1, Damp_Model: 1},] // Soil Layer 2
+            SoilLayers2: [{Name: 'Layer 1',Thickness: 10, Vs: 20, Gamma: 20, Damping: 20, Soil_Model: 1},
+                         {Name: 'Bedrock',Thickness: 5, Vs: 20, Gamma: 20, Damping: 20, Soil_Model: 1},] // Soil Layer 2
         }
 
         // Bind the submission to handleChange() 

@@ -22,9 +22,8 @@ class Soil_Profile extends Component{
                                     { title: "Thickness", field: "Thickness", type:"numeric", align:"center", validate: rowData => rowData.Thickness > 0},
                                     { title: "Vs (m/s)", field: "Vs" , type:"numeric", align:"center", validate: rowData => rowData.Vs > 0},
                                     { title: "Unit Weight (kN/m^3)", field: "Gamma", type: "numeric", align:"center", validate: rowData => rowData.Gamma > 0},
-                                    { title: "Damping (%)", field: "Damping", type: "numeric", align:"center", validate: rowData => (rowData.Damping <=1 && rowData.Damping >=0)},
-                                    { title: "G/Gmax Model", field: "G_Gmax_Model", lookup: { 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }, align:"center", validate: rowData => rowData.G_Gmax_Model >0},
-                                    { title: "Damping Model", field: "Damp_Model", lookup: { 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }, align:"center", validate: rowData => rowData.Damp_Model >0 },
+                                    { title: "Damping (%)", field: "Damping", type: "numeric", align:"center", validate: rowData => (rowData.Damping <=100 && rowData.Damping >=0)},
+                                    { title: "Soil Model", field: "Soil_Model", lookup: { 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }, align:"center", validate: rowData => rowData.Soil_Model >0}
                                 ];
 
         return( 
@@ -50,9 +49,9 @@ class Soil_Profile extends Component{
                                     const Layer_1 = data.slice(0,1);
                                     const Bedrock = data.slice(-1);
                                     const OtherLayers = data.slice(1,-1);
-                                    console.log(Layer_1)
-                                    console.log(Bedrock)
-                                    console.log(OtherLayers)
+                                    // console.log(Layer_1)
+                                    // console.log(Bedrock)
+                                    // console.log(OtherLayers)
                                     newData.Name = "Layer " + (data.length)
                                     this.props.handleChange([...Layer_1, ...OtherLayers, newData, ...Bedrock])
                                     resolve();
