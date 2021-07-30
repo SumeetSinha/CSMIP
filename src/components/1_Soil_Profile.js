@@ -23,8 +23,8 @@ class Soil_Profile extends Component{
                                     { title: "Vs (m/s)", field: "Vs" , type:"numeric", align:"center", validate: rowData => rowData.Vs > 0},
                                     { title: "Unit Weight (kN/m^3)", field: "Gamma", type: "numeric", align:"center", validate: rowData => rowData.Gamma > 0},
                                     { title: "Damping (%)", field: "Damping", type: "numeric", align:"center", validate: rowData => (rowData.Damping <=1 && rowData.Damping >=0)},
-                                    { title: "G/Gmax Model", field: "G_Gmax_Model", lookup: { 1: 'Darendeli & Stokoe (2001)', 2: 'EPRI (93) PI=10' }, align:"center", validate: rowData => rowData.G_Gmax_Model >0},
-                                    { title: "Damping Model", field: "Damp_Model", lookup: { 1: 'Darendeli & Stokoe (2001)', 2: 'EPRI (93) PI=10' }, align:"center", validate: rowData => rowData.Damp_Model >0 },
+                                    { title: "G/Gmax Model", field: "G_Gmax_Model", lookup: { 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }, align:"center", validate: rowData => rowData.G_Gmax_Model >0},
+                                    { title: "Damping Model", field: "Damp_Model", lookup: { 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }, align:"center", validate: rowData => rowData.Damp_Model >0 },
                                 ];
 
         return( 

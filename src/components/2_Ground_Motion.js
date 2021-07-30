@@ -40,7 +40,7 @@ class Ground_Motion extends Component{
             <p></p>
             <Form  onSubmit={this.saveAndContinue} validated>
 
-              <Form.Group as={Row} controlId="Date">
+              {/* <Form.Group as={Row} controlId="Date">
                 <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp; PGA (g) </Form.Label></Col>
                 <Col sm={{ span: 2, offset: 0 }}><Form.Control type="text" name = "PGA" defaultValue={this.props.inputValues.PGA} required onChange={this.props.handleChange}/></Col>
               </Form.Group>
@@ -48,12 +48,14 @@ class Ground_Motion extends Component{
               <Form.Group as={Row} controlId="Date">
                 <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp; PGV (cm/s) </Form.Label></Col>
                 <Col sm={{ span: 2, offset: 0 }}><Form.Control type="text" name = "PGV" defaultValue={this.props.inputValues.PGV} required onChange={this.props.handleChange}/></Col>
-              </Form.Group>
+              </Form.Group> */}
 
               <Form.Group as={Row} controlId="Date">
-               <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp; Upload FAS </Form.Label></Col>
-               <Col sm={{ span: 3, offset: 0 }}><Form.Control type="file" name ="FASFile" accept=".txt" required onChange={this.props.handleFile} /></Col>
+               <Col sm={{ span: 4, offset: 0 }}><Form.Label> &nbsp;&nbsp; Upload Frequency Amplitude Spectrum </Form.Label></Col>
+               <Col sm={{ span: 4, offset: 0 }}><Form.Control type="file" name ="FASFile" accept=".txt" required onChange={this.props.handleFile} /></Col>
               </Form.Group>
+
+              
 
               <div style={{ height: "400px" }}>
                {/* <ResponsiveBar data={data} keys={["earnings"]} indexBy="quarter" /> */}

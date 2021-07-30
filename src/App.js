@@ -15,9 +15,8 @@ function App() {
   return (
       <div className="container"> 
 
-        <h2> Application to Generate Input Motions for NDAs</h2>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-        <hr/>
+        <h2> Generate Ground Moton for Nonlinear Deformation Analyses </h2>
+        A web application for the development of input ground motions for nonlinear deformation analyses following the double convolution approach. The application is expected to facilitate and increase the use of ground motion seismic recordings by practitioners.        <hr/>
 
         <Application />
 

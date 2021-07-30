@@ -31,6 +31,10 @@ class Analysis_Settings extends Component{
             <p></p>
             <Form validated onSubmit={this.saveAndContinue} validated>
 
+              <Form.Group as={Row} controlId="Date">
+                <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp; Depth of Interest </Form.Label></Col>
+                <Col sm={{ span: 2, offset: 0 }}><Form.Control type="text" name = "Depth_of_Interest" defaultValue={this.props.inputValues.Depth_of_Interest} required onChange={this.props.handleChange}/></Col>
+              </Form.Group>
 
               <h4>Calculation Parameters</h4>
               <Form.Group as={Row} controlId="Date">
@@ -56,13 +60,6 @@ class Analysis_Settings extends Component{
               <Form.Group as={Row} controlId="Date">
                 <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp; Wavelength Fraction </Form.Label></Col>
                 <Col sm={{ span: 2, offset: 0 }}><Form.Control type="text" name = "WavFrac" defaultValue={this.props.inputValues.WavFrac} required onChange={this.props.handleChange}/></Col>
-              </Form.Group>
-
-              <h4>Output Specification</h4>
-              <Form.Group as={Row} controlId="Date">
-              &nbsp;&nbsp; &nbsp;&nbsp;<Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp;<Form.Check type="checkbox" label="Peak Ground Acceleration Profile" /> </Form.Label></Col>
-                <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp;<Form.Check type="checkbox" label="Check me out" /> </Form.Label></Col>
-                <Col sm={{ span: 3, offset: 0 }}><Form.Label> &nbsp;&nbsp;<Form.Check type="checkbox" label="Check me out" /> </Form.Label></Col>
               </Form.Group>
               
               <Button variant="secondary" onClick={this.back}>Back</Button>{' '}

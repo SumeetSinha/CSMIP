@@ -4,6 +4,9 @@ import subprocess
 import os
 import json
 import numpy as np
+from operator import itemgetter
+import copy 
+import time 
 
 
 app = Flask(__name__, static_folder='../frontend/build')
@@ -35,6 +38,99 @@ CORS(app)
 # @jwt.user_claims_loader
 # def add_claims_to_access_token(identity):
 #     return users_claims[identity]
+# def getJason
+
+def CreateInputFileForAnalysis(SampleJasonFile,InputParameters):
+
+    SoilModulusModels={ 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }
+    SoilDampingModels={ 1: 'EPRI (93), PI=10', 2: 'Seed & Idriss, Sand Mean' }
+
+    # Opening JSON file
+    with open(SampleJasonFile) as json_file:
+        data = json.load(json_file)
+
+    # write the calculator parameters
+    data["calculator"]["errorTolerance"]=InputParameters["Tol"]
+    data["calculator"]["maxIterations"]=InputParameters["MaxIter"]
+    data["calculator"]["strainRatio"]=InputParameters["EffStrain"]
+
+    # write the site profile parameters
+    data["siteProfile"]["waveFraction"]=InputParameters["WavFrac"]
+    data["siteProfile"]["maxFreq"]=InputParameters["MaxFreq"]
+
+    # write the output depth 
+    data["outputCatalog"]["ratiosOutputCatalog"][0]["outDepth"]=InputParameters["Depth_of_Interest"]
+
+    # write the FAS input file 
+    FASData = InputParameters["FAS"][0]["data"]
+    data["motionLibrary"]["motions"][0]["fourierAcc"]=[ item["y"] for item in FASData ]
+    data["motionLibrary"]["motions"][0]["freq"]=[ item["x"] for item in FASData ]
+
+    # write soil layers and soil type catalog
+    soilLayers = []
+    soilTypecatalog = []
+
+    sampleSoilLayer = {"avg": 150,"depth": 0,"hasMax": False, "hasMin": False,"isVaried": True,"max": 0,"min": 0,"soilType": 0,"stdev": 0,"thickness": 10,"type": 2}
+    sampleSoilTypecatalog = { "damping": 5, "dampingModel": {"average": [0.57,0.86], "name": "Seed & Idriss, Sand Mean","strain": [0.0001,0.000316],"type": 1}, "dampingType": "NonlinearProperty", "freq": 1, "isVaried": True, "meanStress": 2, "minDamping": 0.5,"modulusModel": {"average": [1,0.99], "name": "Seed & Idriss, Sand Mean", "strain": [0.0001,0.000316], "type": 0},"modulusType": "NonlinearProperty", "nCycles": 10, "name": "Soil type 1", "notes": "", "ocr": 1, "pi": 0, "saveData": False, "untWt": 18 }
+    depth = 0
+
+    # print(InputParameters["SoilLayers1"])
+    for i in range(len(InputParameters["SoilLayers1"])-1):
+
+        Layer = (sampleSoilLayer)
+        Typecatalog = (sampleSoilTypecatalog)
+
+        Thickness = InputParameters["SoilLayers1"][i]["Thickness"]
+        Vs = InputParameters["SoilLayers1"][i]["Vs"]
+        Gamma = InputParameters["SoilLayers1"][i]["Gamma"]
+        Damping = InputParameters["SoilLayers1"][i]["Damping"]
+        Modulus_Model = InputParameters["SoilLayers1"][i]["G_Gmax_Model"]
+        Damp_Model = InputParameters["SoilLayers1"][i]["Damp_Model"]
+
+        # print(SoilModulusModels[Modulus_Model], " ", SoilDampingModels[Damp_Model])
+     
+        Layer["avg"] = Vs
+        Layer["depth"] = depth
+        Layer["soilType"] = i
+        Layer["thickness"] = Thickness
+
+        damp_strain, damp_avg = np.loadtxt("./Soil_Damping_Models/"+SoilDampingModels[Damp_Model]+".txt", delimiter=',', unpack=True)
+        Typecatalog["damping"] = Damping
+        Typecatalog["dampingModel"]["average"] = list(damp_avg)
+        Typecatalog["dampingModel"]["strain"] = list(damp_strain)
+        Typecatalog["dampingModel"]["name"] = SoilDampingModels[Damp_Model]
+
+        modulus_strain, modulus_avg = np.loadtxt("./Soil_Modulus_Models/"+SoilModulusModels[Modulus_Model]+".txt", delimiter=',', unpack=True)
+        Typecatalog["modulusModel"]["average"] = list(modulus_avg)
+        Typecatalog["modulusModel"]["strain"] = list(modulus_strain)
+        Typecatalog["modulusModel"]["name"] = SoilModulusModels[Modulus_Model]
+        Typecatalog["untWt"] = Gamma
+
+        Typecatalog["name"] = "Soil Type "+ str(i+1)
+
+        soilLayers.append(copy.deepcopy(Layer))
+        soilTypecatalog.append(copy.deepcopy(Typecatalog))
+
+        depth = depth+Thickness
+
+    # print(soilTypecatalog)
+    data["siteProfile"]["soilLayers"]=soilLayers
+    data["siteProfile"]["soilTypeCatalog"]=soilTypecatalog
+    
+    # ----- write bedrock soil properties 
+    data["siteProfile"]["bedrock"]["avg"]=InputParameters["SoilLayers1"][-1]['Vs']
+    data["siteProfile"]["bedrock"]["depth"]=depth
+    data["siteProfile"]["bedrock"]["untWt"]=InputParameters["SoilLayers1"][-1]['Gamma']
+    data["siteProfile"]["bedrock"]["avgDamping"]=InputParameters["SoilLayers1"][-1]['Damping']
+
+    # write to the json file 
+    jsonString = json.dumps(data)
+    UniqFileName = str(time.time())+'.json'
+    jsonFile = open(UniqFileName, "w")
+    jsonFile.write(jsonString)
+    jsonFile.close()
+
+    return UniqFileName
 
 
 @app.route('/analyze', methods=['POST'])
@@ -42,18 +138,22 @@ CORS(app)
 def login():
 
     print("Sumeet")
-    print(request.json) # get the request,json from frontend
-    print(os.getcwd()) # get current working dierctory
-    command = "\"C:\Program Files (x86)\Strata 1.0.0\strata.exe\" -b Sample_Input.json"
-    File    = "Sample_Input.json"
+    # print(request.json) # get the request,json from frontend
+    # print(os.getcwd()) # get current working dierctory
+
+    # read the sample jason file and create a new input file
+    UniqFileName = CreateInputFileForAnalysis("Sample_Input.json",request.json)   
+    # UniqFileName = "Sample_Input.json"
+    command = "\"C:\Program Files (x86)\Strata 1.0.0\strata.exe\" -b " +  UniqFileName
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
     process.wait()
-    print (process.returncode)
+    # print (process.returncode)
 
     # read the json output file 
-    Fjson = open(File,)
+    Fjson = open(UniqFileName,)
     # returns JSON object as a dictionary
     data = json.load(Fjson)
+    print(data)
     hasResults = data["hasResults"]
 
     if(hasResults):
@@ -69,28 +169,19 @@ def login():
         Output_Period     = np.linspace(np.log10(Output_minPeriod),np.log10(Output_maxPeriod),Output_sizePeriod)
         Output_Period     = np.power(10,Output_Period)
 
-        MaxAccelProfileOutput = data["outputCatalog"]["profilesOutputCatalog"][5]["data"][0][0]
+        # read AccelTransferFunctionOutput at the given depth 
+        AccelTransferFunctionOutput = data["outputCatalog"]["ratiosOutputCatalog"][0]["data"][0][0]
+        print(AccelTransferFunctionOutput)
+        AccelTransferFunctionOutput_List = []
 
-        # MaxAccelProfileOutput = data["outputCatalog"]["ratiosOutputCatalog"][5]["data"][0][0]
+        for i in range(len(AccelTransferFunctionOutput)):
+            AccelTransferFunctionOutput_List.append({"x":Output_Freq[i],"y":AccelTransferFunctionOutput[i]})
 
-        print(MaxAccelProfileOutput)
+        AccelTransferFunctionOutput = [{"id": "AccelTransferFunctionOutput",
+                                        "data":AccelTransferFunctionOutput_List
+                                    },]
 
-        # Output_depth = data["outputCatalog"]['depth']
-
-        # print(Output_Freq)
-        # print(Output_Period)
-
-        # print(data["outputCatalog"]["frequency"]['max'])
-
-
-
-    # # Iterating through the json list
-    # for i in data['emp_details']:
-    #     print(i)
-
-
-
-    return jsonify({'whether_analyzed': 2}), 200
+    return jsonify({'whether_analyzed': 2, "AccelTransferFunctionOutput":AccelTransferFunctionOutput , "ResultsFile":data}), 200
 
     # login_json = request.get_json()
 

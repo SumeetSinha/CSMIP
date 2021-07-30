@@ -11,29 +11,27 @@ class Application extends Component {
         // set the initial input values
         this.state = {
             step: 3,
-            Tol: 2,          // error tolerance (%)
-            MaxIter: 10,     // maximum number of iterations
-            EffStrain: 0.65, // effective strain ratio
-            MaxFreq: 20,     // maximum frequency (Hz)
-            WavFrac: 0.2,    // wavelength fraction 
-            PGA: 0.17,         // peak ground acceleration
-            PGV: 13.27,         // peak ground velocity
-            FASFile: './FAS.txt',
-            FAS: [{"id": "FAS",
-            "data": [{"x" :1, "y":2},{"x" :2, "y":5}]
-          },
-         ],
-            Output_Freq: [],
-            Output_Period: [],
-            zip:'',
-            date:'',
-            whether_analyzed: 0,
-            SoilLayers1: [{Name: 'Layer 1',Thickness: 10, Vs: 150, Gamma: 18, Damping: 0.5, G_Gmax_Model: 1, Damp_Model: 1},
-                          {Name: 'Bedrock',Thickness: -1, Vs: 760, Gamma: -1, Damping: -1, G_Gmax_Model: -1, Damp_Model: -1},
-                         ],
+            Tol: 2,              // error tolerance (%)
+            MaxIter: 15,         // maximum number of iterations
+            EffStrain: 0.65,     // effective strain ratio
+            MaxFreq: 20,         // maximum frequency (Hz)
+            WavFrac: 0.2,        // wavelength fraction 
+            PGA: 0.17,           // peak ground acceleration
+            PGV: 13.27,          // peak ground velocity
+            FASFile: './FAS.txt',// FAS File
+            FAS: [{"id": "FAS","data": [{"x" :1, "y":2},{"x" :2, "y":5}]},], // FAS File Contents
+            Depth_of_Interest:10, // Depth of Interest
+            AccelTransferFunctionOutput:[{"id": "AccelTransferFunctionOutput","data": [{"x" :1, "y":2},{"x" :2, "y":5}]},], // AccelTransferFunctionOutput at depth of interest
+            whether_analyzed: 0, // Whether analysis is performed
+            ResultsFile: [{"id": "FAS","data": [{"x" :1, "y":2},{"x" :2, "y":5}]},],
+            SoilLayers1: [{Name: 'Layer 1',Thickness: 10, Vs: 150, Gamma: 18, Damping: 0.5, G_Gmax_Model: 2, Damp_Model: 2},
+                          {Name: 'Layer 2',Thickness: 20, Vs: 250, Gamma: 20, Damping: 0.5, G_Gmax_Model: 1, Damp_Model: 1},
+                          {Name: 'Layer 3',Thickness: 20, Vs: 0, Gamma: 18, Damping: 0.5, G_Gmax_Model: 2, Damp_Model: 2},
+                          {Name: 'Layer 4',Thickness: 20, Vs: 0, Gamma: 20, Damping: 0.5, G_Gmax_Model: 1, Damp_Model: 1},
+                          {Name: 'Bedrock',Thickness: -1, Vs: 760, Gamma: 22, Damping: 1, G_Gmax_Model: -1, Damp_Model: -1},], // Soil Layer 1 
+
             SoilLayers2: [{Name: 'Layer 1',Thickness: 10, Vs: 20, Gamma: 20, Damping: 20, G_Gmax_Model: 1, Damp_Model: 1},
-                         {Name: 'Bedrock',Thickness: 5, Vs: 20, Gamma: 20, Damping: 20, G_Gmax_Model: 1, Damp_Model: 1},
-                        ]
+                         {Name: 'Bedrock',Thickness: 5, Vs: 20, Gamma: 20, Damping: 20, G_Gmax_Model: 1, Damp_Model: 1},] // Soil Layer 2
         }
 
         // Bind the submission to handleChange() 
@@ -41,7 +39,7 @@ class Application extends Component {
     }
 
     
-    
+    // function to update the step by 1
     nextStep = () => {
         const { step } = this.state
         this.setState({
@@ -51,6 +49,7 @@ class Application extends Component {
 
     }
 
+    // function to decrement the step by 1
     prevStep = () => {
         const { step } = this.state
         this.setState({
@@ -58,6 +57,7 @@ class Application extends Component {
         })
     }
     
+    // function when analyze button is clicked
     Analyze = () => {
         const { step } = this.state
         this.setState({
@@ -78,7 +78,9 @@ class Application extends Component {
         .then(json => {
             console. log(json);
             this.setState({
-                whether_analyzed : json.whether_analyzed
+                whether_analyzed : json.whether_analyzed,
+                AccelTransferFunctionOutput : json.AccelTransferFunctionOutput,
+                ResultsFile : json.ResultsFile
             })
             console. log(this.state);
 
@@ -92,17 +94,20 @@ class Application extends Component {
         .catch(error => console. log(error));
     }
 
-    process = (dataString) => {
-        var lines = dataString
-        .split (/\n/)
-        .map(function(lineStr) {
-            return lineStr.split(",");
-        })
-        .slice(1);
+    // // 
 
-        return JSON.stringify(lines,null,2);
-    }
+    // process = (dataString) => {
+    //     var lines = dataString
+    //     .split (/\n/)
+    //     .map(function(lineStr) {
+    //         return lineStr.split(",");
+    //     })
+    //     .slice(1);
+
+    //     return JSON.stringify(lines,null,2);
+    // }
   
+    // function to handle update of values in form 
     handleChange = (event) => {
         const inputName  = event.target.name;
         const inputValue = event.target.value;
@@ -110,6 +115,7 @@ class Application extends Component {
         this.setState({[inputName]:inputValue});
     }
 
+    // function to handle upload of FAS file
     handleFile = (event) => {
         const inputName  = event.target.name;
         const inputValue = event.target.value;
@@ -166,17 +172,19 @@ class Application extends Component {
         this.setState({[inputName]:file});
     }
 
+    // function to update soil layered profile 1
     updateSoilLayers1 = (newData) => {
         this.setState({SoilLayers1:newData});
     }
 
+    // function to update soil layered profile 2
     updateSoilLayers2 = (newData) => {
         this.setState({SoilLayers2:newData});
     }
 
     render(){
-        const { step, Tol, MaxIter,  EffStrain, MaxFreq, WavFrac, PGA, PGV, FASFile, FAS, Output_Freq, Output_Period, zip, date, whether_analyzed, SoilLayers1, SoilLayers2 } = this.state;
-        const inputValues = { Tol, MaxIter,  EffStrain, MaxFreq, WavFrac, PGA, PGV, FASFile, FAS, Output_Freq, Output_Period, zip, date, whether_analyzed, SoilLayers1, SoilLayers2 };
+        const { step, Tol, MaxIter,  EffStrain, MaxFreq, WavFrac, PGA, PGV, FASFile, FAS, Depth_of_Interest, whether_analyzed, SoilLayers1, SoilLayers2, AccelTransferFunctionOutput,ResultsFile} = this.state;
+        const inputValues = { Tol, MaxIter, EffStrain, MaxFreq, WavFrac, PGA, PGV, FASFile, FAS, Depth_of_Interest, whether_analyzed, SoilLayers1, SoilLayers2, AccelTransferFunctionOutput,ResultsFile};
                
         switch(step) {
         case 1:
